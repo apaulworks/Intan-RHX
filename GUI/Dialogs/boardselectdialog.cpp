@@ -143,7 +143,14 @@ void BoardIdentifier::identifyController(ControllerInfo *controller, int index)
     controller->serialNumber = dev->GetDeviceListSerial(index).c_str();
 
     // Populate usbVersion field.
-    controller->usbVersion = (opalKellyModelName(dev->GetDeviceListModel(index)) == "XEM6010LX45") ? USB2 : USB3;
+    if ((opalKellyModelName(dev->GetDeviceListModel(index)) == "XEM6010LX45") ||
+            (opalKellyModelName(dev->GetDeviceListModel(index)) == "XEM6010LX150")) {
+        controller->usbVersion = USB2;
+        qDebug() << "USB2 Device Set *AP*";
+    } else {
+        controller->usbVersion = USB3;
+        qDebug() << "USB3 Device Set *AP*";
+    }
 
     // Upload bitfile to determine boardMode, expConnected, and numSPIPorts.
     // Initialize expConnected, numSPIPorts, and boardMode to correspond to an unsuccessful mat.
